@@ -26,5 +26,9 @@
 		"files": [
 			"res/files/*"
 		]
-	}
+	},
+	"links": {
+		"source": "https://github.com/OmgRod/AmethystMenu"
+	},
+	"repository": "https://github.com/OmgRod/AmethystMenu"
 }
