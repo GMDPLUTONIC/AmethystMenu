@@ -1,0 +1,30 @@
+{
+	"geode": "3.4.0",
+	"gd": {
+		"android": "2.206",
+		"mac": "2.206",
+		"win": "2.206"
+	},
+	"version": "v1.0.0",
+	"id": "omgrod.amethyst_menu",
+	"name": "Amethyst Menu",
+	"developer": "OmgRod",
+	"description": "This mod menu combines the capabilities of multiple mod menus to make the ultimate mod menu!",
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"importance": "required",
+			"version": ">=1.13.1"
+		},
+		{
+			"id": "geode.custom-keybinds",
+			"importance": "required",
+			"version": ">=1.7.1"
+		}
+	],
+	"resources": {
+		"files": [
+			"res/files/*"
+		]
+	}
+}
