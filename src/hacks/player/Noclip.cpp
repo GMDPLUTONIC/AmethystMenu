@@ -3,7 +3,7 @@
 
 using namespace geode::prelude;
 
-class $modify(PlayLayer) {
+class $modify(MyPlayLayer, PlayLayer) {
     void destroyPlayer(PlayerObject* player, GameObject* obj) {
         bool shouldDestroy = !Mod::get()->getSavedValue<bool>("noclip");
 
