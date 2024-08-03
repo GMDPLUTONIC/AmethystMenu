@@ -1,6 +1,6 @@
-#include "Hacks.hpp"
+#include "hacks.hpp"
 
-bool Hacks::isHackEnabled(char* tag) {
+bool hacks::isHackEnabled(char* tag) {
     return Mod::get()->getSavedValue<bool>(tag);
 }
 
