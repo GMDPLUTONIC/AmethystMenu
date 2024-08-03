@@ -32,9 +32,15 @@ $execute {
             if (ImGui::Begin("Player")) {
                 ImGui::PushFont(openSans);
 
+                if (!hacks::getInstance().hackValueExists("noclip")) {
+                    hacks::getInstance().setHackEnabled("noclip", false);
+                }
                 static bool noclipEnabled = hacks::getInstance().isHackEnabled("noclip");
                 createCheckbox("Noclip", &noclipEnabled, "noclip");
 
+                if (!hacks::getInstance().hackValueExists("icon-hack")) {
+                    hacks::getInstance().setHackEnabled("icon-hack", false);
+                }
                 static bool iconHackEnabled = hacks::getInstance().isHackEnabled("icon-hack");
                 createCheckbox("Icon Hack", &iconHackEnabled, "icon-hack");
 
@@ -42,7 +48,10 @@ $execute {
             }
 			if (ImGui::Begin("Global")) {
                 ImGui::PushFont(openSans);
-
+                
+                if (!hacks::getInstance().hackValueExists("speedhack")) {
+                    hacks::getInstance().setHackIntValue("speedhack", 1);
+                }
                 static int speedHackValue = hacks::getInstance().getIntValue("speedhack");
                 createIntValue("Speedhack", &speedHackValue, "speedhack");
 
@@ -51,7 +60,7 @@ $execute {
             ImGui::End();
         })
         .setVisible(false);
-        
+
     BindManager::get()->registerBindable({
         "open-modmenu"_spr,
         "Open Amethyst Menu",

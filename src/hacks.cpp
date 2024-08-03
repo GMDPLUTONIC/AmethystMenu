@@ -12,6 +12,10 @@ void hacks::setHackEnabled(const std::string& tag, bool enabled) {
     Mod::get()->setSavedValue<bool>(tag, enabled);
 }
 
+void hacks::setHackIntValue(const std::string& tag, int value) {
+    Mod::get()->setSavedValue<int>(tag, value);
+}
+
 bool hacks::hackValueExists(const std::string& tag) {
     return Mod::get()->hasSavedValue(tag);
 }
