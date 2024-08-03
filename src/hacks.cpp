@@ -5,5 +5,5 @@ bool Hacks::isHackEnabled(char* tag) {
 }
 
 void Hacks::setHackEnabled(char* tag, bool enabled) {
-    Mod::get()->setSavedValue<bool>(tag, enabled)
+    Mod::get()->setSavedValue<bool>(tag, enabled);
 }
