@@ -25,9 +25,9 @@ if (NOT CPM_SOURCE_CACHE)
     set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_BINARY_DIR}/cpm-cache")
 endif()
 
-# Add gd-imgui-cocos package
+# Add imgui-cocos package
 CPMAddPackage(
-    NAME gd-imgui-cocos
+    NAME imgui-cocos
     GITHUB_REPOSITORY matcool/gd-imgui-cocos
     GIT_TAG 09a9555
 )
@@ -39,14 +39,14 @@ CPMAddPackage(
     GIT_TAG 6864a7f
 )
 
-# Include directories for gd-imgui-cocos and imgui
+# Include directories for imgui-cocos and imgui
 target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${gd-imgui-cocos_SOURCE_DIR}
+    ${imgui-cocos_SOURCE_DIR}
     ${imgui_SOURCE_DIR}
 )
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} gd-imgui-cocos)
+target_link_libraries(${PROJECT_NAME} imgui-cocos)
 target_link_libraries(${PROJECT_NAME} imgui)
 
 setup_geode_mod(${PROJECT_NAME})
