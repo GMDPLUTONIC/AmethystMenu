@@ -20,10 +20,33 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-CPMAddPackage("gh:matcool/gd-imgui-cocos#09a9555")
-target_link_libraries(${PROJECT_NAME} imgui-cocos)
+# Ensure CPM is available
+if (NOT CPM_SOURCE_CACHE)
+    set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_BINARY_DIR}/cpm-cache")
+endif()
 
-CPMAddPackage("gh:ocornut/imgui#6864a7f")
+# Add gd-imgui-cocos package
+CPMAddPackage(
+    NAME gd-imgui-cocos
+    GITHUB_REPOSITORY matcool/gd-imgui-cocos
+    GIT_TAG 09a9555
+)
+
+# Add imgui package
+CPMAddPackage(
+    NAME imgui
+    GITHUB_REPOSITORY ocornut/imgui
+    GIT_TAG 6864a7f
+)
+
+# Include directories for gd-imgui-cocos and imgui
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    ${gd-imgui-cocos_SOURCE_DIR}
+    ${imgui_SOURCE_DIR}
+)
+
+# Link libraries
+target_link_libraries(${PROJECT_NAME} gd-imgui-cocos)
 target_link_libraries(${PROJECT_NAME} imgui)
 
 setup_geode_mod(${PROJECT_NAME})
