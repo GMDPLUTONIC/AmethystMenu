@@ -1,14 +1,15 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/GameManager.hpp>
 #include "../../hacks.hpp"
 
 using namespace geode::prelude;
 
 class $modify(GameManager) {
     bool isIconUnlocked(int _id, IconType _type) {
-        if (hacks::getInstance().isHackEnabled("iconhack")) {
+        if (hacks::getInstance().isHackEnabled("icon-hack")) {
             if (GameManager::isIconUnlocked(_id, _type)) return true;
             if (_id <= 0) return false;
+            log::info("Icon Hack is on and should work");
             return true;
         } else {
             // Call the original GameManager method
@@ -17,8 +18,9 @@ class $modify(GameManager) {
     }
 
     bool isColorUnlocked(int _id, UnlockType _type) {
-        if (hacks::getInstance().isHackEnabled("colorhack")) {
+        if (hacks::getInstance().isHackEnabled("color-hack")) {
             if (GameManager::isColorUnlocked(_id, _type)) return true;
+            log::info("Color Hack is on and should work");
             return true;
         } else {
             // Call the original GameManager method

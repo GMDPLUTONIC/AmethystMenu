@@ -11,15 +11,15 @@ static ImFont* openSans = nullptr;
 
 static void createCheckbox(const char* label, bool* enabled, const char* tag) {
     if (ImGui::Checkbox(label, enabled)) {
-        printf("Checkbox '%s' changed to %s\n", tag, *enabled ? "true" : "false");
-        hacks::getInstance().setHackEnabled(tag, enabled);
+        log::info("Checkbox '{}' changed to {}", tag, *enabled ? "true" : "false");
+        hacks::getInstance().setHackEnabled(tag, *enabled);  // Ensure you are passing *enabled, not enabled
     }
 }
 
 static void createIntValue(const char* label, int* value, const char* tag) {
     if (ImGui::InputInt(label, value)) {
-        printf("Int value '%s' changed to %d\n", tag, *value);
-        hacks::getInstance().setHackIntValue(tag, *value);
+        log::info("Int value '{}' changed to {}", tag, *value);
+        hacks::getInstance().setHackIntValue(tag, *value);  // Ensure you are passing *value, not value
     }
 }
 
@@ -34,29 +34,33 @@ $execute {
 
                 if (!hacks::getInstance().hackValueExists("noclip")) {
                     hacks::getInstance().setHackEnabled("noclip", false);
+                    log::info("Initialized 'noclip' to false");
                 }
                 static bool noclipEnabled = hacks::getInstance().isHackEnabled("noclip");
                 createCheckbox("Noclip", &noclipEnabled, "noclip");
 
                 if (!hacks::getInstance().hackValueExists("icon-hack")) {
                     hacks::getInstance().setHackEnabled("icon-hack", false);
+                    log::info("Initialized 'icon-hack' to false");
                 }
                 static bool iconHackEnabled = hacks::getInstance().isHackEnabled("icon-hack");
                 createCheckbox("Icon Hack", &iconHackEnabled, "icon-hack");
 
                 if (!hacks::getInstance().hackValueExists("color-hack")) {
                     hacks::getInstance().setHackEnabled("color-hack", false);
+                    log::info("Initialized 'color-hack' to false");
                 }
                 static bool colorHackEnabled = hacks::getInstance().isHackEnabled("color-hack");
                 createCheckbox("Color Hack", &colorHackEnabled, "color-hack");
 
                 ImGui::PopFont();
             }
-			if (ImGui::Begin("Global")) {
+            if (ImGui::Begin("Global")) {
                 ImGui::PushFont(openSans);
                 
                 if (!hacks::getInstance().hackValueExists("speedhack")) {
                     hacks::getInstance().setHackIntValue("speedhack", 1);
+                    log::info("Initialized 'speedhack' to 1");
                 }
                 static int speedHackValue = hacks::getInstance().getIntValue("speedhack");
                 createIntValue("Speedhack", &speedHackValue, "speedhack");
