@@ -19,13 +19,16 @@
 		{
 			"id": "geode.custom-keybinds",
 			"importance": "required",
-			"platforms": ["win"],
+			"platforms": ["windows"],
 			"version": ">=1.7.1"
 		}
 	],
 	"resources": {
 		"files": [
 			"res/files/*"
+		],
+		"sprites": [
+			"res/sprites/*"
 		]
 	},
 	"links": {

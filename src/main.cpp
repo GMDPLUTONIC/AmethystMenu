@@ -1,5 +1,5 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/CCScene.hpp>
+#include <Geode/ui/SceneManager.hpp>
 #include <imgui-cocos.hpp>
 #include "hacks.hpp"
 
@@ -153,3 +153,98 @@ $execute {
         })
         .setVisible(false);
 }
+
+#ifdef GEODE_IS_ANDROID
+
+class BtnLayer : public CCLayer {
+private:
+    CCMenuItemSpriteExtra* btn;
+    bool dragging = false;
+    bool touchStartedOnButton = false;
+    CCPoint touchStartPos;
+    CCPoint btnStartPos;
+
+public:
+    void toggleModMenu(CCObject* pSender) {
+        ImGuiCocos::get().toggle();
+    }
+
+    virtual bool init() {
+        if (!CCLayer::init())
+            return false;
+
+        auto winSize = CCDirector::sharedDirector()->getWinSize();
+
+        auto node = CCNode::create();
+        auto menu = CCMenu::create();
+        btn = CCMenuItemSpriteExtra::create(
+            CCSprite::create("modMenuBtn_001.png"_spr),
+            this,
+            menu_selector(BtnLayer::toggleModMenu)
+        );
+        btn->setPosition({ static_cast<float>((winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f)), 0.f });
+
+        node->addChild(menu);
+        menu->addChild(btn);
+        SceneManager::get()->keepAcrossScenes(node);
+
+        this->setTouchEnabled(true); // Enable touch for the layer
+        this->setTouchMode(kCCTouchesOneByOne); // Ensure single touch mode
+
+        return true;
+    }
+
+    virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event) override {
+        auto touchLocation = touch->getLocation();
+        geode::log::debug("Touch began at: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
+
+        if (btn->boundingBox().containsPoint(touchLocation)) {
+            touchStartedOnButton = true;
+            touchStartPos = touchLocation;
+            btnStartPos = btn->getPosition();
+            return true; // Return true to indicate touch event is handled
+        }
+        return false; // Return false if touch is not handled
+    }
+
+    virtual void ccTouchMoved(CCTouch* touch, CCEvent* event) override {
+        if (touchStartedOnButton) {
+            auto touchLocation = touch->getLocation();
+            geode::log::debug("Touch moved to: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
+
+            if (!dragging && touchLocation.getDistance(touchStartPos) > 7.5f) {
+                dragging = true;
+            }
+
+            if (dragging) {
+                auto diff = touchLocation - touchStartPos;
+                btn->setPosition(btnStartPos + diff);
+            }
+        }
+    }
+
+    virtual void ccTouchEnded(CCTouch* touch, CCEvent* event) override {
+        if (touchStartedOnButton) {
+            geode::log::debug("Touch ended at: ({:.2f}, {:.2f})", touch->getLocation().x, touch->getLocation().y);
+            touchStartedOnButton = false;
+            dragging = false;
+        }
+    }
+
+    virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event) override {
+        if (touchStartedOnButton) {
+            geode::log::debug("Touch cancelled at: ({:.2f}, {:.2f})", touch->getLocation().x, touch->getLocation().y);
+            touchStartedOnButton = false;
+            dragging = false;
+        }
+    }
+
+    CREATE_FUNC(BtnLayer);
+};
+
+$execute {
+    auto btnLayer = BtnLayer::create();
+    CCDirector::sharedDirector()->getRunningScene()->addChild(btnLayer);
+}
+
+#endif
