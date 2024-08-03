@@ -2,7 +2,7 @@
 
 - Added Icon Hack
 - Added Color Hack
-- Added Object Bypass
 - Added Character Filter Bypass
 - Added Text Length Bypass
 - Added Android support
+- Added Android button (dragging coming soon...)

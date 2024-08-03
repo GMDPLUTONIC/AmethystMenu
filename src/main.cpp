@@ -154,7 +154,7 @@ $execute {
         .setVisible(false);
 }
 
-#ifdef GEODE_IS_ANDROID
+// #ifdef GEODE_IS_ANDROID
 
 class BtnLayer : public CCLayer {
 private:
@@ -183,9 +183,12 @@ public:
             menu_selector(BtnLayer::toggleModMenu)
         );
         btn->setPosition({ static_cast<float>((winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f)), 0.f });
+        btn->setID("anethyst-btn");
 
         node->addChild(menu);
+        node->setID("amethyst-node");
         menu->addChild(btn);
+        menu->setID("amethyst-menu");
         SceneManager::get()->keepAcrossScenes(node);
 
         this->setTouchEnabled(true); // Enable touch for the layer
@@ -198,9 +201,12 @@ public:
         auto touchLocation = touch->getLocation();
         geode::log::debug("Touch began at: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
 
-        if (btn->boundingBox().containsPoint(touchLocation)) {
+        // Convert touch location to node space
+        auto nodeTouchLocation = this->convertToNodeSpace(touchLocation);
+
+        if (btn->boundingBox().containsPoint(nodeTouchLocation)) {
             touchStartedOnButton = true;
-            touchStartPos = touchLocation;
+            touchStartPos = nodeTouchLocation;
             btnStartPos = btn->getPosition();
             return true; // Return true to indicate touch event is handled
         }
@@ -212,12 +218,15 @@ public:
             auto touchLocation = touch->getLocation();
             geode::log::debug("Touch moved to: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
 
-            if (!dragging && touchLocation.getDistance(touchStartPos) > 7.5f) {
+            // Convert touch location to node space
+            auto nodeTouchLocation = this->convertToNodeSpace(touchLocation);
+
+            if (!dragging && nodeTouchLocation.getDistance(touchStartPos) > 7.5f) {
                 dragging = true;
             }
 
             if (dragging) {
-                auto diff = touchLocation - touchStartPos;
+                auto diff = nodeTouchLocation - touchStartPos;
                 btn->setPosition(btnStartPos + diff);
             }
         }
@@ -247,4 +256,4 @@ $execute {
     CCDirector::sharedDirector()->getRunningScene()->addChild(btnLayer);
 }
 
-#endif
+// #endif
