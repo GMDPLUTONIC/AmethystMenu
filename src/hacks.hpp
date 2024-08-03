@@ -4,6 +4,6 @@ using namespace geode::prelude;
 
 class hacks {
 public:
-				bool isHackEnabled(char* tag);
-				void setHackEnabled(char* tag, bool enabled);
+	bool isHackEnabled(char* tag);
+	void setHackEnabled(char* tag, bool enabled);
 };
