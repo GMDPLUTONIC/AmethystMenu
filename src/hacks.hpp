@@ -6,4 +6,4 @@ class Hacks {
 public:
 				bool isHackEnabled(char* tag);
 				void setHackEnabled(char* tag, bool enabled);
-}
+};
