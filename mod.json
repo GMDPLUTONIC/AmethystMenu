@@ -8,7 +8,7 @@
 	"version": "v0.1.0-beta.1",
 	"id": "omgrod.amethyst_menu",
 	"name": "Amethyst Menu",
-	"developer": "OmgRod",
+	"developers": ["OmgRod", "Firee"],
 	"description": "This mod menu combines the capabilities of multiple mod menus to make the ultimate mod menu!",
 	"dependencies": [
 		{

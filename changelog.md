@@ -2,3 +2,4 @@
 
 - Added Icon Hack
 - Added Color Hack
+- Added Object Bypass
