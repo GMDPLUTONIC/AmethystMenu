@@ -2,7 +2,7 @@
 
 using namespace geode::prelude;
 
-class Hacks {
+class hacks {
 public:
 				bool isHackEnabled(char* tag);
 				void setHackEnabled(char* tag, bool enabled);
