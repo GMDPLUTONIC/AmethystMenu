@@ -154,7 +154,7 @@ $execute {
         .setVisible(false);
 }
 
-// #ifdef GEODE_IS_ANDROID
+#ifdef GEODE_IS_ANDROID
 
 class BtnLayer : public CCLayer {
 private:
@@ -256,4 +256,4 @@ $execute {
     CCDirector::sharedDirector()->getRunningScene()->addChild(btnLayer);
 }
 
-// #endif
+#endif
