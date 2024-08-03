@@ -19,7 +19,7 @@
 		{
 			"id": "geode.custom-keybinds",
 			"importance": "required",
-			"platforms": ["windows"],
+			"platforms": ["win"],
 			"version": ">=1.7.1"
 		}
 	],
