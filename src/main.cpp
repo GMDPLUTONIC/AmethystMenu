@@ -1,11 +1,32 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScene.hpp>
 #include <imgui-cocos.hpp>
-#include <geode.custom-keybinds/include/Keybinds.hpp>
 #include "hacks.hpp"
 
 using namespace geode::prelude;
+
+#ifdef GEODE_IS_WINDOWS
+
+#include <geode.custom-keybinds/include/Keybinds.hpp>
+
 using namespace keybinds;
+
+$execute {
+    BindManager::get()->registerBindable({
+        "open-modmenu"_spr,
+        "Open Amethyst Menu",
+        "Opens the mod menu",
+        { Keybind::create(KEY_Tab, Modifier::None) },
+        "Amethyst Menu"
+    });
+    new EventListener([=](InvokeBindEvent* event) {
+        if (event->isDown())
+            ImGuiCocos::get().toggle();
+        return ListenerResult::Propagate;
+    }, InvokeBindFilter(nullptr, "open-modmenu"_spr));
+}
+
+#endif
 
 static ImFont* openSans = nullptr;
 
@@ -131,17 +152,4 @@ $execute {
             ImGui::PopFont();
         })
         .setVisible(false);
-
-    BindManager::get()->registerBindable({
-        "open-modmenu"_spr,
-        "Open Amethyst Menu",
-        "Opens the mod menu",
-        { Keybind::create(KEY_Tab, Modifier::None) },
-        "Amethyst Menu"
-    });
-    new EventListener([=](InvokeBindEvent* event) {
-        if (event->isDown())
-            ImGuiCocos::get().toggle();
-        return ListenerResult::Propagate;
-    }, InvokeBindFilter(nullptr, "open-modmenu"_spr));
 }
