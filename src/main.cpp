@@ -1,21 +1,13 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScene.hpp>
 #include <imgui-cocos.hpp>
+#include "hacks.hpp"
 
 using namespace geode::prelude;
 
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 using namespace keybinds;
 
-$execute {
-    BindManager::get()->registerBindable({
-        "open-modmenu"_spr,
-        "Open Amethyst Menu",
-        "Opens the mod menu",
-        { Keybind::create(KEY_Tab, Modifier::None) },
-        "Amethyst Menu"
-    });
-}
 
 static ImFont* openSans = nullptr;
 
@@ -40,15 +32,18 @@ $execute {
             if (ImGui::Begin("Player")) {
                 ImGui::PushFont(openSans);
 
-                static bool noclipEnabled = Mod::get()->getSavedValue<bool>("noclip");
+                static bool noclipEnabled = hacks::getInstance().isHackEnabled("noclip");
                 createCheckbox("Noclip", &noclipEnabled, "noclip");
+
+                static bool iconHackEnabled = hacks::getInstance().isHackEnabled("icon-hack");
+                createCheckbox("Icon Hack", &iconHackEnabled, "icon-hack");
 
                 ImGui::PopFont();
             }
 			if (ImGui::Begin("Global")) {
                 ImGui::PushFont(openSans);
 
-                static int speedHackValue = Mod::get()->getSavedValue<int>("speedhack");
+                static int speedHackValue = hacks::getInstance().getIntValue("speedhack");
                 createIntValue("Speedhack", &speedHackValue, "speedhack");
 
                 ImGui::PopFont();
@@ -56,16 +51,17 @@ $execute {
             ImGui::End();
         })
         .setVisible(false);
+        
+    BindManager::get()->registerBindable({
+        "open-modmenu"_spr,
+        "Open Amethyst Menu",
+        "Opens the mod menu",
+        { Keybind::create(KEY_Tab, Modifier::None) },
+        "Amethyst Menu"
+    });
+    new EventListener([=](InvokeBindEvent* event) {
+        if (event->isDown())
+            ImGuiCocos::get().toggle();
+        return ListenerResult::Propagate;
+    }, InvokeBindFilter(nullptr, "open-modmenu"_spr));
 }
-
-class $modify(MyCCScene, CCScene) {
-public:
-    virtual bool init() {
-        this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
-            if (event->isDown()) {
-                ImGuiCocos::get().toggle();
-            }
-            return ListenerResult::Propagate;
-        }, "open-modmenu"_spr);
-    }
-};

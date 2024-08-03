@@ -10,8 +10,10 @@ public:
         return instance;
     }
 
-    bool isHackEnabled(const char* tag);
-    void setHackEnabled(const char* tag, bool enabled);
+    bool isHackEnabled(const std::string& tag);
+    int getIntValue(const std::string& tag);
+    void setHackEnabled(const std::string& tag, bool enabled);
+    bool hackValueExists(const std::string& tag);
 
 private:
     // Private constructor to prevent instantiation
