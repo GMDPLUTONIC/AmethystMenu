@@ -7,7 +7,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 project(AmethystMenu VERSION 1.0.0)
 
 # Recursively search for all .cpp files in the src directory
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "src/*")
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 

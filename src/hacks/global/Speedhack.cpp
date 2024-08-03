@@ -4,4 +4,4 @@
 
 using namespace geode::prelude;
 
-hacks::getInstance().getIntValue("speedhack");
+// hacks::getInstance().getIntValue("speedhack");

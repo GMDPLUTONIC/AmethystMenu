@@ -1,25 +1,25 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScene.hpp>
 #include <imgui-cocos.hpp>
+#include <geode.custom-keybinds/include/Keybinds.hpp>
 #include "hacks.hpp"
 
 using namespace geode::prelude;
-
-#include <geode.custom-keybinds/include/Keybinds.hpp>
 using namespace keybinds;
-
 
 static ImFont* openSans = nullptr;
 
 static void createCheckbox(const char* label, bool* enabled, const char* tag) {
     if (ImGui::Checkbox(label, enabled)) {
         printf("Checkbox '%s' changed to %s\n", tag, *enabled ? "true" : "false");
+        hacks::getInstance().setHackEnabled(tag, enabled);
     }
 }
 
 static void createIntValue(const char* label, int* value, const char* tag) {
     if (ImGui::InputInt(label, value)) {
         printf("Int value '%s' changed to %d\n", tag, *value);
+        hacks::getInstance().setHackIntValue(tag, *value);
     }
 }
 
@@ -43,6 +43,12 @@ $execute {
                 }
                 static bool iconHackEnabled = hacks::getInstance().isHackEnabled("icon-hack");
                 createCheckbox("Icon Hack", &iconHackEnabled, "icon-hack");
+
+                if (!hacks::getInstance().hackValueExists("color-hack")) {
+                    hacks::getInstance().setHackEnabled("color-hack", false);
+                }
+                static bool colorHackEnabled = hacks::getInstance().isHackEnabled("color-hack");
+                createCheckbox("Color Hack", &colorHackEnabled, "color-hack");
 
                 ImGui::PopFont();
             }
