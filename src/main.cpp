@@ -4,7 +4,6 @@
 
 using namespace geode::prelude;
 
-#ifndef GEODE_IS_ANDROID
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 using namespace keybinds;
 
@@ -17,7 +16,6 @@ $execute {
         "Amethyst Menu"
     });
 }
-#endif
 
 static ImFont* openSans = nullptr;
 
