@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScheduler.hpp>
-#include "Speedhack.hpp"
+#include "../../hacks.hpp"
 
 using namespace geode::prelude;
 
@@ -78,7 +78,7 @@ FMOD_RESULT FMOD_System_createChannelGroup(FMOD::System* self, const char *name,
     if (!masterGroup)
         masterGroup = *channelgroup;
 
-    log::info("WE HAVE A MASTER GROUP LETS GO!");
+    log::info("WE HAVE A MASTER GROUP LET'S GO!");
 
     return res;
 }
