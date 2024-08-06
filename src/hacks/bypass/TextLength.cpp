@@ -10,6 +10,8 @@ class $modify(CCTextInputNode) {
         if (hacks::getInstance().isHackEnabled("text-length")) {
             this->m_maxLabelLength = -1;
             CCTextInputNode::updateLabel(p0);
-        }
+        } else {
+            CCTextInputNode::updateLabel(p0);
+        {
     }
 };
