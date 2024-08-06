@@ -45,7 +45,15 @@ static void createCheckbox(const char* label, bool* enabled, const char* tag) {
 static void createIntValue(const char* label, int* value, const char* tag) {
     if (ImGui::InputInt(label, value)) {
         log::info("Int value '{}' changed to {}", tag, *value);
-        hacks::getInstance().setHackIntValue(tag, *value);  // Ensure you are passing *value, not value
+        hacks::getInstance().setHackIntValue(tag, *value);
+    }
+}
+
+// Function to create an float value input with logging
+static void createFloatValue(const char* label, float* value, const char* tag) {
+    if (ImGui::InputFloat(label, value)) {
+        log::info("Float value '{}' changed to {}", tag, *value);
+        hacks::getInstance().setHackFloatValue(tag, *value);
     }
 }
 
