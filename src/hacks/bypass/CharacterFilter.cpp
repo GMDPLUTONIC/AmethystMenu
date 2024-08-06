@@ -13,5 +13,5 @@ class $modify(CCTextInputNode) {
         } else {
             CCTextInputNode::updateLabel(p0);
         {
-    }
+    };
 };
