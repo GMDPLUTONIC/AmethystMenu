@@ -2,94 +2,37 @@
 #include <Geode/modify/CCScheduler.hpp>
 #include "../../hacks.hpp"
 
-using namespace geode::prelude;
+// come back to this later
 
-FMOD::ChannelGroup* masterGroup;
-
-float speedhackLogic(float dt)
-{
-    #ifndef GEODE_IS_IOS
-    if (!masterGroup)
-        FMODAudioEngine::sharedEngine()->m_system->getMasterChannelGroup(&masterGroup);
-    #endif
-
-    if (!masterGroup)
-        return dt;
-
-    float speedMultiplier = hacks::getInstance().getIntValue("speedhack");
-
-    if (speedMultiplier != 1)
-    {
-        #ifdef GEODE_IS_IOS
-        reinterpret_cast<FMOD_RESULT(__cdecl*)(FMOD::ChannelControl*, float)>(geode::base::get() + 0x4ffec4)(masterGroup, speedMultiplier);
-        #else
-        masterGroup->setPitch(speedMultiplier);
-        #endif
-        ColourUtility::update(dt * speedMultiplier);
-        return dt * speedMultiplier;
-    }
-
-    #ifdef GEODE_IS_IOS
-    reinterpret_cast<FMOD_RESULT(__cdecl*)(FMOD::ChannelControl*, float)>(geode::base::get() + 0x4ffec4)(masterGroup, 1);
-    #else
-    masterGroup->setPitch(1);
-    #endif
-    ColourUtility::update(dt);
-    return dt;
-}
-
-#ifdef GEODE_IS_MACOS
-
-class $modify (CCScheduler)
-{
-    virtual void update(float dt)
-    {
-        dt = speedhackLogic(dt);
+class $modify(CCScheduler) {
+    void update(float dt) {
+        auto speedhackValue = hacks::getInstance().getIntValue("speedhack");
+        if (speedhack == 1) return CCScheduler::update(dt);
+        speedhack->value.floatValue = std::max(speedhack->value.floatValue, 0.01f);
+        if (speedhack->value.floatValue == 1.0F && !current_macro.isEnabled) return CCScheduler::update(dt);
+        float speedHackValue = stof(Utils::setPrecision(speedhack->value.floatValue, 3));
+        dt *= speedHackValue; // def not copied!
+        if (current_macro.isEnabled && PlayLayer::get() != nullptr) { 
+            float dt2 = (1.f / current_macro.framerate);
+            auto startTime = std::chrono::high_resolution_clock::now();
+            int mult = static_cast<int>((dt + current_macro.loaf)/dt2);  
+            using namespace std::literals;
+            for (int i = 0; i < mult; i++) {
+                CCScheduler::update(dt2);
+                if (std::chrono::high_resolution_clock::now() - startTime > 33.333ms) {
+                    mult = i + 1;
+                    break;
+                }
+            }
+            current_macro.loaf += (dt - dt2 * mult); 
+            if (Hacks::isHackEnabled("Playback") && !PlayLayer::get()->m_levelSettings->m_platformerMode) {
+                syncCooldown++;
+                if (syncCooldown >= 20 && current_macro.loaf > 1) {
+                    syncCooldown = 0;
+                }
+            }
+            return;
+        }
         CCScheduler::update(dt);
     }
 };
-
-#else
-
-void myUpdate(CCScheduler* ins, float dt)
-{
-    dt = speedhackLogic(dt);
-    ins->update(dt);
-}
-
-$execute {
-    Mod::get()->hook(
-        reinterpret_cast<void*>(
-            geode::addresser::getVirtual(&CCScheduler::update)
-        ),
-        &myUpdate,
-        "cocos2d::CCScheduler::update",
-        tulip::hook::TulipConvention::Thiscall
-    );
-}
-
-#endif
-
-#ifdef GEODE_IS_IOS
-
-FMOD_RESULT FMOD_System_createChannelGroup(FMOD::System* self, const char *name, FMOD::ChannelGroup **channelgroup) {
-    auto res = reinterpret_cast<FMOD_RESULT(__cdecl*)(FMOD::System*, const char*, FMOD::ChannelGroup**)>(geode::base::get() + 0x4c8964)(self, name, channelgroup);
-
-    if (!masterGroup)
-        masterGroup = *channelgroup;
-
-    log::info("WE HAVE A MASTER GROUP LET'S GO!");
-
-    return res;
-}
-
-$execute {
-    Mod::get()->hook(
-        reinterpret_cast<void*>(geode::base::get() + 0x4c8964), 
-        &FMOD_System_createChannelGroup, 
-        "FMOD::System::createChannelGroup", 
-        tulip::hook::TulipConvention::Cdecl 
-    );
-}
-
-#endif
