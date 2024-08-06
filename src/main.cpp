@@ -175,6 +175,7 @@ private:
     CCPoint touchStartPos;
     CCPoint btnStartPos;
     CCPoint position;
+    CCPoint initialPosition;
 
 public:
     void toggleModMenu(CCObject* pSender) {
@@ -190,15 +191,18 @@ public:
 
         auto winSize = CCDirector::sharedDirector()->getWinSize();
 
+        initialPosition = { static_cast<float>((winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f)), 0.f };
+        position = initialPosition;
+
         menu = CCMenu::create();
-        menu->setPosition(ccp(0, 0));
+        menu->setPosition(position);
         btn = CCMenuItemSpriteExtra::create(
             CCSprite::create("modMenuBtn_001.png"_spr),
             this,
             menu_selector(BtnLayer::toggleModMenu)
         );
 
-        btnOverlay = CCSprite::create("modMenuBtn_001.png"_spr);
+        btnOverlay = CCSprite::create("qolmodButtonOverlay.png"_spr);
         btn->addChild(btnOverlay);
 
         menu->addChild(btn);
@@ -255,6 +259,10 @@ public:
 
             btn->runAction(scale);
             doingThing = false;
+
+            // Save the position if needed
+            // Mod::get()->setSavedValue("posX", position.x);
+            // Mod::get()->setSavedValue("posY", position.y);
         }
     }
 
@@ -271,9 +279,12 @@ public:
     CREATE_FUNC(BtnLayer);
 };
 
-$execute {
-    auto btnLayer = BtnLayer::create();
-    CCDirector::sharedDirector()->getRunningScene()->addChild(btnLayer);
-}
+class $modify (CCScene) {
+    void onEnter() {
+        CCScene::onEnter();
+        auto btnLayer = BtnLayer::create();
+        this->addChild(btnLayer, 9999); // Ensure the button layer is always on top
+    }
+};
 
 #endif
