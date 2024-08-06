@@ -183,7 +183,7 @@ public:
         ImGuiCocos::get().toggle();
     }
 
-    virtual bool init() {
+    virtual bool init() override {
         if (!CCLayer::init())
             return false;
 
@@ -192,7 +192,9 @@ public:
 
         auto winSize = CCDirector::sharedDirector()->getWinSize();
 
-        initialPosition = { static_cast<float>((winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f)), 0.f };
+        // Correct initialization of initialPosition
+        float posX = (winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f);
+        initialPosition = CCPoint(posX, 0.f);
         position = initialPosition;
 
         menu = CCMenu::create();
@@ -281,7 +283,7 @@ public:
 };
 
 class $modify (CCScene) {
-    void onEnter() {
+    void onEnter() override {
         CCScene::onEnter();
         auto btnLayer = BtnLayer::create();
         this->addChild(btnLayer, 9999); // Ensure the button layer is always on top
