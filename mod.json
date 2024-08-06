@@ -5,10 +5,10 @@
 		"mac": "2.206",
 		"win": "2.206"
 	},
-	"version": "v0.1.0-beta.2",
+	"version": "v0.1.0-beta.3",
 	"id": "omgrod.amethyst_menu",
 	"name": "Amethyst Menu",
-	"developers": ["OmgRod", "Firee"],
+	"developer": " OmgRod",
 	"description": "This mod menu combines the capabilities of multiple mod menus to make the ultimate mod menu!",
 	"dependencies": [
 		{
