@@ -10,6 +10,8 @@ class $modify(CCTextInputNode) {
         if (hacks::getInstance().isHackEnabled("character")) {
             this->setAllowedChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-!?:;)(/\\\"\'`*= +-_%[]<>|@&^#{}%$~");
             CCTextInputNode::updateLabel(p0);
-        }
+        } else {
+            CCTextInputNode::updateLabel(p0);
+        {
     }
 };
