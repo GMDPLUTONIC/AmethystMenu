@@ -12,29 +12,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
-        override: true
-
-    - name: Clone geode-sdk/cli repository
-      run: git clone https://github.com/geode-sdk/cli.git
-
-    - name: Change directory to cli
-      working-directory: cli
-      run: cargo install --path .
-
-    - name: Find the .geode attachment URL
-      id: find-attachment
-      run: |
-        attachment_url=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.assets[] | select(.name == "omgrod.amethyst_menu.geode") | .browser_download_url')
-        echo "::set-output name=url::$attachment_url"
-
-    - name: Update mods using geode CLI
-      run: geode index mods update ${{ steps.find-attachment.outputs.url }}
-
     - name: Send message to Discord
       env:
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -67,3 +44,26 @@ jobs:
         curl -X POST $DISCORD_WEBHOOK_URL \
           -H "Content-Type: application/json" \
           -d "$MESSAGE"
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Clone geode-sdk/cli repository
+      run: git clone https://github.com/geode-sdk/cli.git
+
+    - name: Change directory to cli
+      working-directory: cli
+      run: cargo install --path .
+
+    - name: Find the .geode attachment URL
+      id: find-attachment
+      run: |
+        attachment_url=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.assets[] | select(.name == "omgrod.amethyst_menu.geode") | .browser_download_url')
+        echo "::set-output name=url::$attachment_url"
+
+    - name: Update mods using geode CLI
+      run: geode index mods update ${{ steps.find-attachment.outputs.url }}
