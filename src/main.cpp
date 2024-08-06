@@ -198,7 +198,7 @@ public:
             menu_selector(BtnLayer::toggleModMenu)
         );
 
-        btnOverlay = CCSprite::create("qolmodButtonOverlay.png"_spr);
+        btnOverlay = CCSprite::create("modMenuBtn_001.png"_spr);
         btn->addChild(btnOverlay);
 
         menu->addChild(btn);
