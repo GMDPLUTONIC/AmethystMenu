@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/ui/SceneManager.hpp>
+#include <Geode/modify/CCScene>
 #include <imgui-cocos.hpp>
 #include "hacks.hpp"
 
