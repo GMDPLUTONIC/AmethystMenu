@@ -4,6 +4,8 @@
 
 // come back to this later
 
+/*
+
 class $modify(CCScheduler) {
     void update(float dt) {
         auto speedhackValue = hacks::getInstance().getIntValue("speedhack");
@@ -36,3 +38,5 @@ class $modify(CCScheduler) {
         CCScheduler::update(dt);
     }
 };
+
+*/
