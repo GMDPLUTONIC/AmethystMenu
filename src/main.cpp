@@ -96,10 +96,10 @@ static void DrawWrappedWindows() {
         }},
         { "Global", []{
             if (!hacks::getInstance().hackValueExists("speedhack")) {
-                hacks::getInstance().setHackIntValue("speedhack", 1);
-                log::info("Initialized 'speedhack' to 1");
+                hacks::getInstance().setHackFloatValue("speedhack", 1.f);
+                log::info("Initialized 'speedhack' to 1.f");
             }
-            static int speedHackValue = hacks::getInstance().getIntValue("speedhack");
+            static int speedHackValue = hacks::getInstance().getFloatValue("speedhack");
             createIntValue("Speedhack", &speedHackValue, "speedhack");
         }},
         { "Bypass", []{
