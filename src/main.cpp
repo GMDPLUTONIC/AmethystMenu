@@ -168,126 +168,92 @@ $execute {
 class BtnLayer : public CCLayer {
 private:
     CCMenuItemSpriteExtra* btn;
-    CCSprite* btnOverlay;
-    CCMenu* menu;
     bool dragging = false;
-    bool doingThing = false;
     bool touchStartedOnButton = false;
     CCPoint touchStartPos;
     CCPoint btnStartPos;
-    CCPoint position;
-    CCPoint initialPosition;
 
 public:
     void toggleModMenu(CCObject* pSender) {
         ImGuiCocos::get().toggle();
     }
 
-    virtual bool init() override {
+    virtual bool init() {
         if (!CCLayer::init())
             return false;
 
-        this->setTouchEnabled(true); // Enable touch for the layer
-        this->setTouchMode(kCCTouchesOneByOne); // Ensure single touch mode
-
         auto winSize = CCDirector::sharedDirector()->getWinSize();
 
-        // Correct initialization of initialPosition
-        float posX = (winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f);
-        initialPosition = CCPoint(posX, 0.f);
-        position = initialPosition;
-
-        menu = CCMenu::create();
-        menu->setPosition(position);
+        auto node = CCNode::create();
+        auto menu = CCMenu::create();
         btn = CCMenuItemSpriteExtra::create(
             CCSprite::create("modMenuBtn_001.png"_spr),
             this,
             menu_selector(BtnLayer::toggleModMenu)
         );
+        btn->setPosition({ static_cast<float>((winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f)), 0.f });
 
-        btnOverlay = CCSprite::create("qolmodButtonOverlay.png"_spr);
-        btn->addChild(btnOverlay);
-
+        node->addChild(menu);
         menu->addChild(btn);
-        this->addChild(menu);
+        SceneManager::get()->keepAcrossScenes(node);
+
+        this->setTouchEnabled(true); // Enable touch for the layer
+        this->setTouchMode(kCCTouchesOneByOne); // Ensure single touch mode
 
         return true;
     }
 
     virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event) override {
-        if (!CCLayer::ccTouchBegan(touch, event))
-            return false;
+        auto touchLocation = touch->getLocation();
+        geode::log::debug("Touch began at: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
 
-        if (!this->isVisible())
-            return false;
-
-        doingThing = false;
-        dragging = false;
-
-        auto point = btn->boundingBox();
-        point.origin += ccp(btn->getContentWidth() / 2, btn->getContentHeight() / 2);
-
-        if (point.containsPoint(btn->convertToNodeSpace(touch->getLocation()))) {
-            auto scale = CCEaseInOut::create(CCScaleTo::create(0.1f, 0.8f), 2);
-            scale->setTag(69);
-
-            btn->runAction(scale);
-            doingThing = true;
+        if (btn->boundingBox().containsPoint(touchLocation)) {
+            touchStartedOnButton = true;
+            touchStartPos = touchLocation;
+            btnStartPos = btn->getPosition();
+            return true; // Return true to indicate touch event is handled
         }
-
-        return doingThing;
+        return false; // Return false if touch is not handled
     }
 
     virtual void ccTouchMoved(CCTouch* touch, CCEvent* event) override {
-        if (doingThing && !btn->getActionByTag(69)) {
-            if (btn->getPosition().getDistance(touch->getLocation()) > 7.5f) {
+        if (touchStartedOnButton) {
+            auto touchLocation = touch->getLocation();
+            geode::log::debug("Touch moved to: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
+
+            if (!dragging && touchLocation.getDistance(touchStartPos) > 7.5f) {
                 dragging = true;
             }
 
             if (dragging) {
-                position = touch->getLocation();
-                menu->setPosition(position);
+                auto diff = touchLocation - touchStartPos;
+                btn->setPosition(btnStartPos + diff);
             }
         }
-        CCLayer::ccTouchMoved(touch, event);
     }
 
     virtual void ccTouchEnded(CCTouch* touch, CCEvent* event) override {
-        if (doingThing) {
-            if (!dragging)
-                toggleModMenu(nullptr);
-
-            auto scale = CCEaseBackOut::create(CCScaleTo::create(0.35f, 1));
-            scale->setTag(69);
-
-            btn->runAction(scale);
-            doingThing = false;
-
-            // Save the position if needed
-            // Mod::get()->setSavedValue("posX", position.x);
-            // Mod::get()->setSavedValue("posY", position.y);
+        if (touchStartedOnButton) {
+            geode::log::debug("Touch ended at: ({:.2f}, {:.2f})", touch->getLocation().x, touch->getLocation().y);
+            touchStartedOnButton = false;
+            dragging = false;
         }
     }
 
     virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event) override {
-        if (doingThing) {
-            auto scale = CCEaseBackOut::create(CCScaleTo::create(0.35f, 1));
-            scale->setTag(69);
-
-            btn->runAction(scale);
-            doingThing = false;
+        if (touchStartedOnButton) {
+            geode::log::debug("Touch cancelled at: ({:.2f}, {:.2f})", touch->getLocation().x, touch->getLocation().y);
+            touchStartedOnButton = false;
+            dragging = false;
         }
     }
 
     CREATE_FUNC(BtnLayer);
 };
 
-class $modify (CCScene) {
-    void onEnter() override {
-        CCScene::onEnter();
-        auto btnLayer = BtnLayer::create();
-        this->addChild(btnLayer, 9999); // Ensure the button layer is always on top
-    }
-};
+$execute {
+    auto btnLayer = BtnLayer::create();
+    CCDirector::sharedDirector()->getRunningScene()->addChild(btnLayer);
+}
 
 #endif
