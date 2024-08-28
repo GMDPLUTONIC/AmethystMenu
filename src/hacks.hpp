@@ -2,11 +2,11 @@
 
 using namespace geode::prelude;
 
-class hacks {
+class Hacks {
 public:
     // Singleton access method
-    static hacks& getInstance() {
-        static hacks instance;
+    static Hacks& getInstance() {
+        static Hacks instance;
         return instance;
     }
 
@@ -20,5 +20,5 @@ public:
 
 private:
     // Private constructor to prevent instantiation
-    hacks() = default;
+    Hacks() = default;
 };

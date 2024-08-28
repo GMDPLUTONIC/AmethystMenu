@@ -1,4 +1,4 @@
-#include "../../hacks.hpp"
+#include "../../Hacks.hpp"
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;
@@ -7,7 +7,7 @@ using namespace geode::prelude;
 
 class $modify(CCTextInputNode) {
     void updateLabel(gd::string p0) {
-        if (hacks::getInstance().isHackEnabled("text-length")) {
+        if (Hacks::getInstance().isHackEnabled("text-length")) {
             this->m_maxLabelLength = -1;
             CCTextInputNode::updateLabel(p0);
         } else {

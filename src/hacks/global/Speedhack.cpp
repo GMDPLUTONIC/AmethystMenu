@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScheduler.hpp>
-#include "../../hacks.hpp"
+#include "../../Hacks.hpp"
 
 // come back to this later
 
@@ -8,7 +8,7 @@
 
 class $modify(CCScheduler) {
     void update(float dt) {
-        auto speedhackValue = hacks::getInstance().getIntValue("speedhack");
+        auto speedhackValue = Hacks::getInstance().getIntValue("speedhack");
         if (speedhack == 1) return CCScheduler::update(dt);
         speedhack->value.floatValue = std::max(speedhack->value.floatValue, 0.01f);
         if (speedhack->value.floatValue == 1.0F && !current_macro.isEnabled) return CCScheduler::update(dt);

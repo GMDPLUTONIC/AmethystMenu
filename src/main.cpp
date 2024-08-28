@@ -1,15 +1,15 @@
 #include <Geode/Geode.hpp>
 #include <Geode/ui/SceneManager.hpp>
 #include <Geode/modify/CCScene.hpp>
+#include <Geode/modify/CCTouchDispatcher.hpp>
 #include <imgui-cocos.hpp>
+#include "BtnLayer.hpp"
 #include "hacks.hpp"
 
 using namespace geode::prelude;
 
 #ifdef GEODE_IS_WINDOWS
-
 #include <geode.custom-keybinds/include/Keybinds.hpp>
-
 using namespace keybinds;
 
 $execute {
@@ -26,23 +26,19 @@ $execute {
         return ListenerResult::Propagate;
     }, InvokeBindFilter(nullptr, "open-modmenu"_spr));
 }
-
 #endif
 
 static ImFont* openSans = nullptr;
 
-// Default padding
 static float PADDING = 0.0f;
 
-// Function to create a checkbox with logging
 static void createCheckbox(const char* label, bool* enabled, const char* tag) {
     if (ImGui::Checkbox(label, enabled)) {
         log::info("Checkbox '{}' changed to {}", tag, *enabled ? "true" : "false");
-        hacks::getInstance().setHackEnabled(tag, *enabled);  // Ensure you are passing *enabled, not enabled
+        hacks::getInstance().setHackEnabled(tag, *enabled);
     }
 }
 
-// Function to create an integer value input with logging
 static void createIntValue(const char* label, int* value, const char* tag) {
     if (ImGui::InputInt(label, value)) {
         log::info("Int value '{}' changed to {}", tag, *value);
@@ -50,7 +46,6 @@ static void createIntValue(const char* label, int* value, const char* tag) {
     }
 }
 
-// Function to create an float value input with logging
 static void createFloatValue(const char* label, float* value, const char* tag) {
     if (ImGui::InputFloat(label, value)) {
         log::info("Float value '{}' changed to {}", tag, *value);
@@ -58,13 +53,10 @@ static void createFloatValue(const char* label, float* value, const char* tag) {
     }
 }
 
-// Draw windows with initial positions and sizes
 static void DrawWrappedWindows() {
-    // Compute padding based on screen width at runtime
     auto screenSize = CCDirector::sharedDirector()->getWinSizeInPixels();
     PADDING = screenSize.width / 50.f;
 
-    // List of window names and their associated content functions
     struct WindowInfo {
         std::string name;
         std::function<void()> drawContent;
@@ -120,8 +112,8 @@ static void DrawWrappedWindows() {
         }}
     };
 
-    float windowWidth = screenSize.width / 8.5f; // Set initial width
-    float windowHeight = screenSize.height / 6.f; // Set initial height
+    float windowWidth = screenSize.width / 8.5f;
+    float windowHeight = screenSize.height / 6.f;
     float xPos = PADDING;
     float yPos = PADDING;
 
@@ -133,16 +125,15 @@ static void DrawWrappedWindows() {
         ImGui::SetNextWindowSize(windowSize, ImGuiCond_Once);
         ImGui::Begin(window.name.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-        window.drawContent(); // Draw the content of the window
+        window.drawContent();
 
         ImGui::End();
 
-        xPos += windowWidth + PADDING; // Update the x position for the next window
+        xPos += windowWidth + PADDING;
 
-        // Move to the next row if windows exceed screen width
         if (xPos + windowWidth > screenSize.width - PADDING) {
-            xPos = PADDING; // Reset to left side
-            yPos += windowHeight + PADDING; // Move down for next row
+            xPos = PADDING;
+            yPos += windowHeight + PADDING;
         }
     }
 }
@@ -155,105 +146,9 @@ $execute {
         .draw([]{
             ImGui::PushFont(openSans);
 
-            // Draw the wrapped windows
             DrawWrappedWindows();
 
             ImGui::PopFont();
         })
         .setVisible(false);
 }
-
-#ifdef GEODE_IS_ANDROID
-
-class BtnLayer : public CCLayer {
-private:
-    CCMenuItemSpriteExtra* btn;
-    bool dragging = false;
-    bool touchStartedOnButton = false;
-    CCPoint touchStartPos;
-    CCPoint btnStartPos;
-
-public:
-    void toggleModMenu(CCObject* pSender) {
-        ImGuiCocos::get().toggle();
-    }
-
-    virtual bool init() {
-        if (!CCLayer::init())
-            return false;
-
-        auto winSize = CCDirector::sharedDirector()->getWinSize();
-
-        auto node = CCNode::create();
-        auto menu = CCMenu::create();
-        btn = CCMenuItemSpriteExtra::create(
-            CCSprite::create("modMenuBtn_001.png"_spr),
-            this,
-            menu_selector(BtnLayer::toggleModMenu)
-        );
-        btn->setPosition({ static_cast<float>((winSize.width * -0.5f) + (btn->getContentWidth() / 2) + (winSize.width * 0.02f)), 0.f });
-
-        node->addChild(menu);
-        menu->addChild(btn);
-        SceneManager::get()->keepAcrossScenes(node);
-
-        this->setTouchEnabled(true); // Enable touch for the layer
-        this->setTouchMode(kCCTouchesOneByOne); // Ensure single touch mode
-
-        return true;
-    }
-
-    virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event) override {
-        auto touchLocation = touch->getLocation();
-        geode::log::debug("Touch began at: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
-
-        if (btn->boundingBox().containsPoint(touchLocation)) {
-            touchStartedOnButton = true;
-            touchStartPos = touchLocation;
-            btnStartPos = btn->getPosition();
-            return true; // Return true to indicate touch event is handled
-        }
-        return false; // Return false if touch is not handled
-    }
-
-    virtual void ccTouchMoved(CCTouch* touch, CCEvent* event) override {
-        if (touchStartedOnButton) {
-            auto touchLocation = touch->getLocation();
-            geode::log::debug("Touch moved to: ({:.2f}, {:.2f})", touchLocation.x, touchLocation.y);
-
-            if (!dragging && touchLocation.getDistance(touchStartPos) > 7.5f) {
-                dragging = true;
-            }
-
-            if (dragging) {
-                auto diff = touchLocation - touchStartPos;
-                btn->setPosition(btnStartPos + diff);
-            }
-        }
-    }
-
-    virtual void ccTouchEnded(CCTouch* touch, CCEvent* event) override {
-        if (touchStartedOnButton) {
-            geode::log::debug("Touch ended at: ({:.2f}, {:.2f})", touch->getLocation().x, touch->getLocation().y);
-            touchStartedOnButton = false;
-            dragging = false;
-        }
-    }
-
-    virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event) override {
-        if (touchStartedOnButton) {
-            geode::log::debug("Touch cancelled at: ({:.2f}, {:.2f})", touch->getLocation().x, touch->getLocation().y);
-            touchStartedOnButton = false;
-            dragging = false;
-        }
-    }
-
-    CREATE_FUNC(BtnLayer);
-};
-
-$execute {
-    auto btnLayer = BtnLayer::create();
-    CCDirector::sharedDirector()->getRunningScene()->addChild(btnLayer);
-}
-
-#endif

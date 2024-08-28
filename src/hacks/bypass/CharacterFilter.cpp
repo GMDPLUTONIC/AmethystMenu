@@ -1,4 +1,4 @@
-#include "../../hacks.hpp"
+#include "../../Hacks.hpp"
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;
@@ -7,7 +7,7 @@ using namespace geode::prelude;
 
 class $modify(CCTextInputNode) {
     void updateLabel(std::string p0) {
-        if (hacks::getInstance().isHackEnabled("character")) {
+        if (Hacks::getInstance().isHackEnabled("character")) {
             this->setAllowedChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-!?:;)(/\\\"\'`*= +-_%[]<>|@&^#{}%$~");
             CCTextInputNode::updateLabel(p0);
         } else {
