@@ -4,7 +4,7 @@
 #include <Geode/modify/CCTouchDispatcher.hpp>
 #include <imgui-cocos.hpp>
 #include "BtnLayer.hpp"
-#include "hacks.hpp"
+#include "Hacks.hpp"
 
 using namespace geode::prelude;
 
@@ -35,21 +35,21 @@ static float PADDING = 0.0f;
 static void createCheckbox(const char* label, bool* enabled, const char* tag) {
     if (ImGui::Checkbox(label, enabled)) {
         log::info("Checkbox '{}' changed to {}", tag, *enabled ? "true" : "false");
-        hacks::getInstance().setHackEnabled(tag, *enabled);
+        Hacks::getInstance().setHackEnabled(tag, *enabled);
     }
 }
 
 static void createIntValue(const char* label, int* value, const char* tag) {
     if (ImGui::InputInt(label, value)) {
         log::info("Int value '{}' changed to {}", tag, *value);
-        hacks::getInstance().setHackIntValue(tag, *value);
+        Hacks::getInstance().setHackIntValue(tag, *value);
     }
 }
 
 static void createFloatValue(const char* label, float* value, const char* tag) {
     if (ImGui::InputFloat(label, value)) {
         log::info("Float value '{}' changed to {}", tag, *value);
-        hacks::getInstance().setHackFloatValue(tag, *value);
+        Hacks::getInstance().setHackFloatValue(tag, *value);
     }
 }
 
@@ -66,48 +66,48 @@ static void DrawWrappedWindows() {
 
     std::vector<WindowInfo> windows = {
         { "Player", []{
-            if (!hacks::getInstance().hackValueExists("noclip")) {
-                hacks::getInstance().setHackEnabled("noclip", false);
+            if (!Hacks::getInstance().hackValueExists("noclip")) {
+                Hacks::getInstance().setHackEnabled("noclip", false);
                 log::info("Initialized 'noclip' to false");
             }
-            static bool noclipEnabled = hacks::getInstance().isHackEnabled("noclip");
+            static bool noclipEnabled = Hacks::getInstance().isHackEnabled("noclip");
             createCheckbox("Noclip", &noclipEnabled, "noclip");
 
-            if (!hacks::getInstance().hackValueExists("icon-hack")) {
-                hacks::getInstance().setHackEnabled("icon-hack", false);
+            if (!Hacks::getInstance().hackValueExists("icon-hack")) {
+                Hacks::getInstance().setHackEnabled("icon-hack", false);
                 log::info("Initialized 'icon-hack' to false");
             }
-            static bool iconHackEnabled = hacks::getInstance().isHackEnabled("icon-hack");
+            static bool iconHackEnabled = Hacks::getInstance().isHackEnabled("icon-hack");
             createCheckbox("Icon Hack", &iconHackEnabled, "icon-hack");
 
-            if (!hacks::getInstance().hackValueExists("color-hack")) {
-                hacks::getInstance().setHackEnabled("color-hack", false);
+            if (!Hacks::getInstance().hackValueExists("color-hack")) {
+                Hacks::getInstance().setHackEnabled("color-hack", false);
                 log::info("Initialized 'color-hack' to false");
             }
-            static bool colorHackEnabled = hacks::getInstance().isHackEnabled("color-hack");
+            static bool colorHackEnabled = Hacks::getInstance().isHackEnabled("color-hack");
             createCheckbox("Color Hack", &colorHackEnabled, "color-hack");
         }},
         { "Global", []{
-            if (!hacks::getInstance().hackValueExists("speedhack")) {
-                hacks::getInstance().setHackFloatValue("speedhack", 1.f);
+            if (!Hacks::getInstance().hackValueExists("speedhack")) {
+                Hacks::getInstance().setHackFloatValue("speedhack", 1.f);
                 log::info("Initialized 'speedhack' to 1.f");
             }
-            static int speedHackValue = hacks::getInstance().getFloatValue("speedhack");
+            static int speedHackValue = Hacks::getInstance().getFloatValue("speedhack");
             createIntValue("Speedhack", &speedHackValue, "speedhack");
         }},
         { "Bypass", []{
-            if (!hacks::getInstance().hackValueExists("character")) {
-                hacks::getInstance().setHackEnabled("character", false);
+            if (!Hacks::getInstance().hackValueExists("character")) {
+                Hacks::getInstance().setHackEnabled("character", false);
                 log::info("Initialized 'character' to false");
             }
-            static bool characterFilterEnabled = hacks::getInstance().isHackEnabled("character");
+            static bool characterFilterEnabled = Hacks::getInstance().isHackEnabled("character");
             createCheckbox("Character Filter", &characterFilterEnabled, "character");
 
-            if (!hacks::getInstance().hackValueExists("text-length")) {
-                hacks::getInstance().setHackEnabled("text-length", false);
+            if (!Hacks::getInstance().hackValueExists("text-length")) {
+                Hacks::getInstance().setHackEnabled("text-length", false);
                 log::info("Initialized 'text-length' to false");
             }
-            static bool textLengthEnabled = hacks::getInstance().isHackEnabled("text-length");
+            static bool textLengthEnabled = Hacks::getInstance().isHackEnabled("text-length");
             createCheckbox("Text Length", &textLengthEnabled, "text-length");
         }}
     };
