@@ -37,7 +37,7 @@ jobs:
           --arg url "$RELEASE_URL" \
           --arg attachment "$ATTACHMENT_URL" \
           '{
-            content: "A new update has been released!\n\n**\($name)**\n\n\($body)\n\n[Download Attachment](\($attachment))\n\n[Release URL](\($url))"
+            content: "@everyone A new update has been released!\n\n**\($name)**\n\n\($body)\n\n[Download Attachment](\($attachment))\n\n[Release URL](\($url))"
           }')
 
         # Send the message to Discord

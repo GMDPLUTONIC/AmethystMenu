@@ -1,3 +1,11 @@
+# v0.2.0
+
+- Added "Font size" setting (restart required)
+- Slightly improved logo
+- Added April Fools tab (broken and WIP)
+- Added "Theme" setting (restart required)
+- Removed Android support
+
 # v0.1.0
 
 - Added Icon Hack

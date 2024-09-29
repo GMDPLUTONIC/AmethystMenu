@@ -1,11 +1,11 @@
 {
-	"geode": "3.4.0",
+	"geode": "3.7.1",
 	"gd": {
 		"android": "2.206",
 		"mac": "2.206",
 		"win": "2.206"
 	},
-	"version": "v0.1.0-beta.4",
+	"version": "v0.2.0-alpha.1",
 	"id": "omgrod.amethyst_menu",
 	"name": "Amethyst Menu",
 	"developer": " OmgRod",
@@ -35,5 +35,27 @@
 		"source": "https://github.com/OmgRod/AmethystMenu",
 		"community": "https://discord.gg/vK3DuqJwyW"
 	},
-	"repository": "https://github.com/OmgRod/AmethystMenu"
+	"repository": "https://github.com/OmgRod/AmethystMenu",
+	"settings": {
+		"font-size": {
+			"type": "float",
+			"min": 0.5,
+			"max": 2,
+			"default": 1,
+			"name": "Font size",
+			"description": "Font size of text on mod menu (RESTART REQUIRED)"
+		},
+		"theme": {
+			"type": "color",
+			"name": "Theme",
+			"description": "Color theme for the mod menu.",
+			"default": "#007acc"
+		},
+		"april-fools": {
+			"type": "bool",
+			"name": "April Fools",
+			"description": "Enables hacks to bring back old April Fools",
+			"default": false
+		}
+	}
 }
