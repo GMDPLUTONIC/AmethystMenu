@@ -3,7 +3,7 @@
 #include <Geode/modify/CCScene.hpp>
 #include <Geode/modify/CCTouchDispatcher.hpp>
 #include <imgui-cocos.hpp>
-#include "Hacks.hpp"
+#include "hacks.hpp"
 
 using namespace geode::prelude;
 

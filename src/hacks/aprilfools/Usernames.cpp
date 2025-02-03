@@ -1,6 +1,6 @@
 // this code needs to be fixed
 
-#include "../../Hacks.hpp"
+#include "../../hacks.hpp"
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;

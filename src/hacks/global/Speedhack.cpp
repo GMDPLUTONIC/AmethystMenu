@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScheduler.hpp>
-#include "../../Hacks.hpp"
+#include "../../hacks.hpp"
 
 // come back to this later
 

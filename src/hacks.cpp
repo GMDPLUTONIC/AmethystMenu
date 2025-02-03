@@ -1,4 +1,4 @@
-#include "Hacks.hpp"
+#include "hacks.hpp"
 
 bool Hacks::isHackEnabled(const std::string& tag) {
     return Mod::get()->getSavedValue<bool>(tag);
