@@ -148,7 +148,7 @@ static void DrawWrappedWindows() {
 
         ImGui::SetNextWindowPos(windowPos, ImGuiCond_Once);
         ImGui::SetNextWindowSize(windowSize, ImGuiCond_Once);
-        ImGui::Begin(window.name.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::Begin(window.name.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove);
 
         window.drawContent();
 
