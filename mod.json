@@ -5,7 +5,7 @@
 		"mac": "2.2074",
 		"win": "2.2074"
 	},
-	"version": "v0.2.0-alpha.1",
+	"version": "v0.2.0-alpha.2",
 	"id": "omgrod.amethyst_menu",
 	"name": "Amethyst Menu",
 	"developer": " OmgRod",
@@ -57,5 +57,6 @@
 			"description": "Enables hacks to bring back old April Fools",
 			"default": false
 		}
-	}
+	},
+	"tags": ["cheat", "customization", "universal", "utility", "gameplay", "interface"]
 }
