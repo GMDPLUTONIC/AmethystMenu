@@ -12,7 +12,3 @@ Special thanks to [matcool](https://github.com/matcool) for the [Basic UI theme]
 - Color Hack
 - Object Bypass
 - and more... (listed in [CREDITS.md](https://github.com/OmgRod/AmethystMenu/blob/master/CREDITS.md))
-
-## Terms
-
-Read the terms and conditions [here](https://github.com/OmgRod/AmethystMenu/blob/master/res/files/TERMS.md). Please follow RobTop's TOS.
