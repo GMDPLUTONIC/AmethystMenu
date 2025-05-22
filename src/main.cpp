@@ -175,5 +175,5 @@ $execute {
             DrawWrappedWindows();
             ImGui::PopFont();
         })
-        .setVisible(false);
+        .setVisible(true);
 }
